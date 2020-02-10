@@ -1,0 +1,8 @@
+# Default ignored files
+
+# Environments
+
+airport-app/venv/
+
+# PyCharm files
+airport-app/.idea
