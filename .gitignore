@@ -5,4 +5,5 @@
 airport-app/venv/
 
 # PyCharm files
-airport-app/.idea
+.idea
+__pycache__/

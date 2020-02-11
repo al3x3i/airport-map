@@ -1,4 +1,5 @@
 import csv
+import json
 import time
 
 import requests
@@ -8,6 +9,11 @@ from termcolor import colored
 
 class ElasticsearchUtils:
 
+    ElIndexAirport = ['airport_id', 'name', 'city', 'country',
+                      'iata', 'icao', 'latitude', 'longitude',
+                      'altitude', 'timezone', 'dst',
+                      'tz_db_time', 'type', 'source']
+
     def __init__(self, el_host: str, el_port: int):
         self.AIRPORT_INDEX: str = 'airport_data'
         self.TIME_SLEEP_SEC: int = 3
@@ -16,7 +22,13 @@ class ElasticsearchUtils:
         self.__airports_url = "https://raw.githubusercontent.com/Al3x3i/airport-map/master/airports.dat"
 
     def initialize_elasticsearch(self):
+
         if self.check_elasticsearch(self.EL_CONNECTION_RETRIES):
+
+            # //TODO ONLY FOR DEVELOPMENT
+            self.es.indices.delete(self.AIRPORT_INDEX)
+            self.load_airports_data()
+            # // TODO REMOVE ABOVE COMMANDS
             return True
         else:
             self.load_airports_data()
@@ -40,9 +52,14 @@ class ElasticsearchUtils:
         print("Loading records for Elasticsearch")
         with requests.Session() as s:
             decoded_response = s.get(self.__airports_url).content.decode('utf-8')
+
             formatted_csv_data = csv.reader(decoded_response.splitlines(), delimiter=',')
 
-            for row in formatted_csv_data:
-                print(row)
+            for record_id, record_data in enumerate(formatted_csv_data):
+                # Add records to Elasticsearch
+                formatted_fields = dict(zip(self.ElIndexAirport, record_data))
+                formatted_fields_json = json.dumps(formatted_fields)
+                #
+                self.es.index(index=self.AIRPORT_INDEX, doc_type='truck', id=record_id, body=formatted_fields_json)
 
         return None
