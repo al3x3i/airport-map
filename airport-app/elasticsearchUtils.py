@@ -39,8 +39,7 @@ class ElasticsearchUtils:
                 print(colored("Failed to establish connection with Elasticsearch", 'red'))
                 exit(1)
 
-            el_status = self.es.indices.exists(self.AIRPORT_INDEX)
-            return el_status
+            return self.es.indices.exists(self.AIRPORT_INDEX)
         except ConnectionError as ex:
             print(colored("Retry Elasticsearch connection: {0}".format(retries), 'green'))
             time.sleep(self.TIME_SLEEP_SEC)
@@ -49,7 +48,7 @@ class ElasticsearchUtils:
         return True
 
     def load_airports_data(self):
-        print("Loading records for Elasticsearch")
+        print("Start loading records into the Elasticsearch")
         with requests.Session() as s:
             decoded_response = s.get(self.__airports_url).content.decode('utf-8')
 
@@ -62,4 +61,4 @@ class ElasticsearchUtils:
                 #
                 self.es.index(index=self.AIRPORT_INDEX, doc_type='truck', id=record_id, body=formatted_fields_json)
 
-        return None
+        print("Finished Loading records into the Elasticsearch")
