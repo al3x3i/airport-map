@@ -41,3 +41,7 @@ Get indexes overwiew in Elasticsearch using "ElasticSearch Head" Extension in Ch
 https://openflights.org/data.html
 
 ##### More information you can find here https://hub.docker.com/_/elasticsearch/
+
+##### (Learning) Options to run React App locally:
+https://create-react-app.dev/docs/deployment/
+

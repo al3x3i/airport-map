@@ -7,3 +7,6 @@ airport-app/venv/
 # PyCharm files
 .idea
 __pycache__/
+
+# React
+.vscode
