@@ -1,7 +1,7 @@
 // import "./App.css";
 
 import React from "react";
-// import axios from "axios";
+import axios from "axios";
 import mapboxgl from "mapbox-gl";
 
 mapboxgl.accessToken =
@@ -15,6 +15,7 @@ class App extends React.Component {
       lat: 34,
       zoom: 1.5
     };
+    this.baseURL = "http://localhost:5000";
     this.globalMap = null;
     this.drawAirportPoint = this.drawAirportPoint.bind(this);
     this.callBackdrawAirportPoint = this.callBackdrawAirportPoint.bind(this);
@@ -66,9 +67,16 @@ class App extends React.Component {
   }
 
   fetchAirportportData() {
-    // axios
-    //   .get("https://api.github.com/users/maecapozzi")
-    //   .then(response => console.log(response));
+    axios
+      .get(this.baseURL + "/search?q=tartu")
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        // alert(error);
+        console.log(error);
+        console.log(error.response.data);
+      });
   }
 
   componentDidMount() {
