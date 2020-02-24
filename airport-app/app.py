@@ -16,6 +16,7 @@ APP_DEBUG_MODE = False
 #     ELASTICSEARCH_HOST = os.environ.get("es", sys.argv[0])
 # else:
 #     ELASTICSEARCH_HOST = os.environ.get("es", DEFAULT_HOST)
+utils = ElasticsearchUtils(el_host=EL_DEFAULT_HOST, el_port=EL_DEFAULT_PORT)
 
 
 def create_app():
@@ -23,13 +24,10 @@ def create_app():
     CORS(app)
     app.config.from_object("config.DevelopmentConfig")
     app.register_blueprint(blueprint)
-
+    app.el_utils = utils
     app.run(host=APP_DEFAULT_HOST, port=APP_DEFAULT_PORT)
 
 
-utils = ElasticsearchUtils(
-    el_host=EL_DEFAULT_HOST, el_port=EL_DEFAULT_PORT)
 if __name__ == '__main__':
-
     utils.initialize_elasticsearch()
     create_app()

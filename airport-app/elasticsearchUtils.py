@@ -23,7 +23,7 @@ class ElasticsearchUtils:
         self.__airports_url = "https://raw.githubusercontent.com/Al3x3i/airport-map/master/airports.dat"
 
     def fetch_data(self, cityName: str):
-        return "found"
+        print("found")
 
     def initialize_elasticsearch(self):
 

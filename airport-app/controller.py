@@ -2,13 +2,14 @@
 
 
 from flask import Blueprint, render_template, request, jsonify
-
+from flask import current_app as app
 
 blueprint = Blueprint('main', __name__)
 
 
 @blueprint.route('/')
 def index():
+    app._get_current_object().el_utils.fetch_data("tartu")  # TODO Debug
     return render_template('index.html')
 
 
