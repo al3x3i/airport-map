@@ -7,6 +7,9 @@ In this project I used next technologies:
 - PyCharm Community
 - Visual Studio Code
 
+#### Install Python3 dependencies
+pip3 install -r airport-app/requirements.txt
+
 #### Elasticsearch
 
 ```
