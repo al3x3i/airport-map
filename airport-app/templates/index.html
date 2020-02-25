@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Airports Map</title>
-</head>
-<body>
+  </head>
+  <body>
     <p>Hello Flask</p>
-</body>
+    {% for item in data %}
+    <li>{{item}}</li>
+    {% endfor %}
+  </body>
 </html>

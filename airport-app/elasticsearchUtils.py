@@ -4,7 +4,11 @@ import time
 
 import requests
 from elasticsearch import Elasticsearch, ConnectionError
+from elasticsearch_dsl import Search
+
 from termcolor import colored
+
+import json
 
 
 class ElasticsearchUtils:
@@ -23,7 +27,15 @@ class ElasticsearchUtils:
         self.__airports_url = "https://raw.githubusercontent.com/Al3x3i/airport-map/master/airports.dat"
 
     def fetch_data(self, cityName: str):
-        print("found")
+        result = self.es.search(
+            index="airport_data",
+            body={
+                "query": {"match": {"city": cityName}},
+                "size": 750  # max document size
+            }
+        )
+        print("found:%s", result)
+        return result
 
     def initialize_elasticsearch(self):
 
