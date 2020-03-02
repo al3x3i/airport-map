@@ -163,14 +163,28 @@ class SearchSerction extends React.Component {
   render() {
     return (
       <div className="search-section">
-        <div>"Search Input"</div>
-        <div>
-          <input
-            type="text"
-            id="fname"
-            placeholder="Search.."
-            onKeyDown={this.findAirport}
-          />
+        <div className="search-title">Quick Search</div>
+        <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+          <div className="search-goup airport-city">
+            <label class="mdb-main-label">Search by city:</label>{" "}
+            <input
+              class="form-control"
+              type="text"
+              placeholder="Search..."
+              aria-label="Search"
+              onKeyDown={this.findAirport}
+            />
+          </div>
+          <div className="search-goup airport-name">
+            <label class="mdb-main-label">Search by airport name:</label>{" "}
+            <input
+              class="form-control"
+              type="text"
+              placeholder="Search..."
+              aria-label="Search"
+              onKeyDown={this.findAirport}
+            />
+          </div>
         </div>
       </div>
     );
