@@ -71,7 +71,8 @@ class App extends React.Component {
       container: this.mapContainer,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [lng, lat],
-      zoom
+      zoom,
+      attributionControl: false //Remove MapBox logo
     });
 
     map.on("move", () => {
@@ -92,18 +93,32 @@ class App extends React.Component {
     this.globalMap = map;
   }
 
-  callbackDrawAirportPoint(searchCityKey) {
+  clearMapDraw() {
     var lastSource = this.globalMap.getSource("airport-point");
 
     if (lastSource) {
       this.cleanMapPoints();
     }
+  }
+
+  callbackTest(airportName) {
+    this.clearMapDraw();
+  }
+
+  callbackDrawAirportPoint(searchCityKey) {
+    this.clearMapDraw();
     this.fetchAirportportData(searchCityKey);
   }
 
-  fetchAirportportData(searchCityKey) {
-    console.log("searchCityKey: " + searchCityKey);
-    if (searchCityKey === "") {
+  fetchAirportportData(searchCityKey, searchNameKey) {
+    var searchURL = this.baseURL + "/search";
+
+    if (searchCityKey !== "") {
+      searchURL += "?q=" + searchCityKey;
+    } else if (searchNameKey !== "") {
+      searchURL += "?n=" + searchNameKey;
+    } else {
+      console.log("Missing search key");
       return;
     }
 
@@ -138,24 +153,37 @@ class App extends React.Component {
           </div>
         </div>
         <div ref={el => (this.mapContainer = el)} className="mapContainer" />
-        <SearchSerction callBackFunc={this.callbackDrawAirportPoint} />
+        <SearchSerction
+          callBackFunc={this.callbackDrawAirportPoint}
+          test={this.callbackTest}
+        />
       </div>
     );
   }
 }
 
 class SearchSerction extends React.Component {
-  searchCallBack;
+  searchCityCallBack;
+  searchNameCallBack;
   constructor(props: Props) {
     super(props);
-    this.searchCallBack = this.props.callBackFunc;
-    this.findAirport = this.findAirport.bind(this);
+    this.searchCityCallBack = this.props.callBackFunc;
+    this.searchNameCallBack = this.props.test;
+    this.findAirportCity = this.findAirportCity.bind(this);
+    this.findAirportName = this.findAirportName.bind(this);
   }
 
-  findAirport(e) {
+  findAirportCity(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      this.searchCallBack(e.target.value);
+      this.searchCityCallBack(e.target.value);
+    }
+  }
+
+  findAirportName(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      this.searchNameCallBack(e.target.value);
     }
   }
 
@@ -166,23 +194,23 @@ class SearchSerction extends React.Component {
         <div className="search-title">Quick Search</div>
         <div class="md-form active-pink active-pink-2 mb-3 mt-0">
           <div className="search-goup airport-city">
-            <label class="mdb-main-label">Search by city:</label>{" "}
+            <label className="mdb-main-label">Search by airport city:</label>{" "}
             <input
-              class="form-control"
+              className="form-control"
               type="text"
               placeholder="Search..."
               aria-label="Search"
-              onKeyDown={this.findAirport}
+              onKeyDown={this.findAirportCity}
             />
           </div>
           <div className="search-goup airport-name">
-            <label class="mdb-main-label">Search by airport name:</label>{" "}
+            <label className="mdb-main-label">Search by airport name:</label>{" "}
             <input
-              class="form-control"
+              className="form-control"
               type="text"
               placeholder="Search..."
               aria-label="Search"
-              onKeyDown={this.findAirport}
+              onKeyDown={this.findAirportName}
             />
           </div>
         </div>
