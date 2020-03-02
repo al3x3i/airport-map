@@ -34,8 +34,16 @@ class ElasticsearchUtils:
                 "size": 750  # max document size
             }
         )
+
+        airports = [row["_source"] for row in result["hits"]["hits"]]
+
+        # Only return first airport
+        if airports:
+            airport = airports[0]
+            return airport
+
         print("found:%s", result)
-        return result
+        return None
 
     def initialize_elasticsearch(self):
 

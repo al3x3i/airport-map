@@ -24,19 +24,17 @@ def getAirportData():
         return message, 400
 
     try:
+        res = app._get_current_object().el_utils.fetch_data(query)
+        if res is None:
+            return jsonify()
+        return jsonify(res)
 
-        # utils.fetch_data()
-        # es.search(
-        #     index="sfdata",
-        #     body={
-        #         "query": {"match": {"fooditems": key}},
-        #         "size": 750  # max document size
-        #     })
+    except Exception as e:
 
         message = jsonify({
             "status": "error",
             "msg": "Cannot fetch data el"
         })
         return message, 400
-    except Exception as e:
+
         print("ERROR")

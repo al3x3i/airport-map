@@ -21,17 +21,16 @@ class App extends React.Component {
     this.callBackdrawAirportPoint = this.callBackdrawAirportPoint.bind(this);
   }
 
-  callBackdrawAirportPoint(cityName) {
+  callBackdrawAirportPoint(searchCityKey) {
     var lastSource = this.globalMap.getSource("airport-point");
 
     if (lastSource) {
       this.cleanMapPoints();
     }
-    this.drawAirportPoint();
-    console.log(cityName);
+    this.fetchAirportportData(searchCityKey);
   }
 
-  drawAirportPoint() {
+  drawAirportPoint(longitude, latitude) {
     this.globalMap
       .addSource("airport-point", {
         type: "geojson",
@@ -42,7 +41,7 @@ class App extends React.Component {
               type: "Feature",
               geometry: {
                 type: "Point",
-                coordinates: [26.6, 58.3]
+                coordinates: [longitude, latitude]
               }
             }
           ]
@@ -58,7 +57,6 @@ class App extends React.Component {
         },
         filter: ["==", "$type", "Point"]
       });
-    this.fetchAirportportData();
   }
 
   cleanMapPoints() {
@@ -66,16 +64,30 @@ class App extends React.Component {
     this.globalMap.removeSource("airport-point");
   }
 
-  fetchAirportportData() {
+  fetchAirportportData(searchCityKey) {
+    console.log("searchCityKey: " + searchCityKey);
+    if (searchCityKey === "") {
+      return;
+    }
+
     axios
-      .get(this.baseURL + "/search?q=tartu")
+      .get(this.baseURL + "/search?q=" + searchCityKey)
       .then(response => {
-        console.log(response);
+        if (Object.keys(response.data).length !== 0) {
+          var latitude = response.data.latitude;
+          var longitude = response.data.longitude;
+          this.drawAirportPoint(longitude, latitude);
+          console.log("Request response: " + JSON.stringify(response.data));
+
+          return;
+        }
+        console.log("Empty result");
       })
       .catch(error => {
         // alert(error);
         console.log(error);
         console.log(error.response.data);
+        alert("Error, cannot get data!");
       });
   }
 
@@ -124,17 +136,17 @@ class App extends React.Component {
 }
 
 class SearchSerction extends React.Component {
-  drawAirport;
+  searchCallBack;
   constructor(props: Props) {
     super(props);
-    this.drawAirport = this.props.callBackFunc;
+    this.searchCallBack = this.props.callBackFunc;
     this.findAirport = this.findAirport.bind(this);
   }
 
   findAirport(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      this.drawAirport(e.target.value);
+      this.searchCallBack(e.target.value);
     }
   }
 
