@@ -18,16 +18,7 @@ class App extends React.Component {
     this.baseURL = "http://localhost:5000";
     this.globalMap = null;
     this.drawAirportPoint = this.drawAirportPoint.bind(this);
-    this.callBackdrawAirportPoint = this.callBackdrawAirportPoint.bind(this);
-  }
-
-  callBackdrawAirportPoint(searchCityKey) {
-    var lastSource = this.globalMap.getSource("airport-point");
-
-    if (lastSource) {
-      this.cleanMapPoints();
-    }
-    this.fetchAirportportData(searchCityKey);
+    this.callbackDrawAirportPoint = this.callbackDrawAirportPoint.bind(this);
   }
 
   drawAirportPoint(longitude, latitude) {
@@ -59,36 +50,18 @@ class App extends React.Component {
       });
   }
 
+  flyToMapPosition(longitude, latitude) {
+    this.globalMap.flyTo({
+      center: [longitude, latitude],
+      essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      speed: 0.7,
+      zoom: 7
+    });
+  }
+
   cleanMapPoints() {
     this.globalMap.removeLayer("airport-layer");
     this.globalMap.removeSource("airport-point");
-  }
-
-  fetchAirportportData(searchCityKey) {
-    console.log("searchCityKey: " + searchCityKey);
-    if (searchCityKey === "") {
-      return;
-    }
-
-    axios
-      .get(this.baseURL + "/search?q=" + searchCityKey)
-      .then(response => {
-        if (Object.keys(response.data).length !== 0) {
-          var latitude = response.data.latitude;
-          var longitude = response.data.longitude;
-          this.drawAirportPoint(longitude, latitude);
-          console.log("Request response: " + JSON.stringify(response.data));
-
-          return;
-        }
-        console.log("Empty result");
-      })
-      .catch(error => {
-        // alert(error);
-        console.log(error);
-        console.log(error.response.data);
-        alert("Error, cannot get data!");
-      });
   }
 
   componentDidMount() {
@@ -119,6 +92,42 @@ class App extends React.Component {
     this.globalMap = map;
   }
 
+  callbackDrawAirportPoint(searchCityKey) {
+    var lastSource = this.globalMap.getSource("airport-point");
+
+    if (lastSource) {
+      this.cleanMapPoints();
+    }
+    this.fetchAirportportData(searchCityKey);
+  }
+
+  fetchAirportportData(searchCityKey) {
+    console.log("searchCityKey: " + searchCityKey);
+    if (searchCityKey === "") {
+      return;
+    }
+
+    axios
+      .get(this.baseURL + "/search?q=" + searchCityKey)
+      .then(response => {
+        if (Object.keys(response.data).length !== 0) {
+          var latitude = response.data.latitude;
+          var longitude = response.data.longitude;
+          this.drawAirportPoint(longitude, latitude);
+          this.flyToMapPosition(longitude, latitude);
+          console.log("Request response: " + JSON.stringify(response.data));
+        } else {
+          console.log("Empty result");
+        }
+      })
+      .catch(error => {
+        // alert(error);
+        console.log(error);
+        console.log(error.response.data);
+        alert("Error, cannot get data!");
+      });
+  }
+
   render() {
     return (
       <div>
@@ -129,7 +138,7 @@ class App extends React.Component {
           </div>
         </div>
         <div ref={el => (this.mapContainer = el)} className="mapContainer" />
-        <SearchSerction callBackFunc={this.callBackdrawAirportPoint} />
+        <SearchSerction callBackFunc={this.callbackDrawAirportPoint} />
       </div>
     );
   }
@@ -156,7 +165,12 @@ class SearchSerction extends React.Component {
       <div className="search-section">
         <div>"Search Input"</div>
         <div>
-          <input type="text" id="fname" onKeyDown={this.findAirport} />
+          <input
+            type="text"
+            id="fname"
+            placeholder="Search.."
+            onKeyDown={this.findAirport}
+          />
         </div>
       </div>
     );
