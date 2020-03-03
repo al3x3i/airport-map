@@ -18,7 +18,8 @@ class App extends React.Component {
     this.baseURL = "http://localhost:5000";
     this.globalMap = null;
     this.drawAirportPoint = this.drawAirportPoint.bind(this);
-    this.callbackDrawAirportPoint = this.callbackDrawAirportPoint.bind(this);
+    this.callbackSearchAirportCity = this.callbackSearchAirportCity.bind(this); // How to bind, shorter code
+    this.callbackSearchAirportName = this.callbackSearchAirportName.bind(this);
   }
 
   drawAirportPoint(longitude, latitude) {
@@ -72,7 +73,7 @@ class App extends React.Component {
       style: "mapbox://styles/mapbox/streets-v11",
       center: [lng, lat],
       zoom,
-      attributionControl: false //Remove MapBox logo
+      attributionControl: false //Hint: Remove MapBox logo
     });
 
     map.on("move", () => {
@@ -86,10 +87,10 @@ class App extends React.Component {
     });
 
     map.on("load", function() {
-      console.log("TEST LOAD");
+      console.log("Call on load function");
     });
 
-    //TODO Better way to create Set map as Global
+    //TODO another way to set map as global variable
     this.globalMap = map;
   }
 
@@ -101,20 +102,21 @@ class App extends React.Component {
     }
   }
 
-  callbackTest(airportName) {
+  callbackSearchAirportName(airportName) {
     this.clearMapDraw();
+    this.fetchAirportportData("", airportName);
   }
 
-  callbackDrawAirportPoint(searchCityKey) {
+  callbackSearchAirportCity(searchCityKey) {
     this.clearMapDraw();
-    this.fetchAirportportData(searchCityKey);
+    this.fetchAirportportData(searchCityKey, "");
   }
 
   fetchAirportportData(searchCityKey, searchNameKey) {
     var searchURL = this.baseURL + "/search";
 
     if (searchCityKey !== "") {
-      searchURL += "?q=" + searchCityKey;
+      searchURL += "?c=" + searchCityKey;
     } else if (searchNameKey !== "") {
       searchURL += "?n=" + searchNameKey;
     } else {
@@ -123,7 +125,7 @@ class App extends React.Component {
     }
 
     axios
-      .get(this.baseURL + "/search?q=" + searchCityKey)
+      .get(searchURL)
       .then(response => {
         if (Object.keys(response.data).length !== 0) {
           var latitude = response.data.latitude;
@@ -136,9 +138,7 @@ class App extends React.Component {
         }
       })
       .catch(error => {
-        // alert(error);
         console.log(error);
-        console.log(error.response.data);
         alert("Error, cannot get data!");
       });
   }
@@ -154,8 +154,8 @@ class App extends React.Component {
         </div>
         <div ref={el => (this.mapContainer = el)} className="mapContainer" />
         <SearchSerction
-          callBackFunc={this.callbackDrawAirportPoint}
-          test={this.callbackTest}
+          callBackFuncCity={this.callbackSearchAirportCity}
+          callBackFuncCity={this.callbackSearchAirportName}
         />
       </div>
     );
@@ -167,8 +167,8 @@ class SearchSerction extends React.Component {
   searchNameCallBack;
   constructor(props: Props) {
     super(props);
-    this.searchCityCallBack = this.props.callBackFunc;
-    this.searchNameCallBack = this.props.test;
+    this.searchCityCallBack = this.props.callBackFuncCity;
+    this.searchNameCallBack = this.props.callBackFuncCity;
     this.findAirportCity = this.findAirportCity.bind(this);
     this.findAirportName = this.findAirportName.bind(this);
   }

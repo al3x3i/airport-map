@@ -26,14 +26,24 @@ class ElasticsearchUtils:
         self.es = Elasticsearch([{'host': el_host, 'port': el_port}])
         self.__airports_url = "https://raw.githubusercontent.com/Al3x3i/airport-map/master/airports.dat"
 
-    def fetch_data(self, cityName: str):
-        result = self.es.search(
-            index="airport_data",
-            body={
-                "query": {"match": {"city": cityName}},
-                "size": 750  # max document size
-            }
-        )
+    def fetch_data(self, cityName: str, airportName: str):
+
+        if cityName:
+            result = self.es.search(
+                index="airport_data",
+                body={
+                    "query": {"match": {"city": cityName}},
+                    "size": 750  # max document size
+                }
+            )
+        elif airportName:
+            result = self.es.search(
+                index="airport_data",
+                body={
+                    "query": {"match": {"name": airportName}},
+                    "size": 750  # max document size
+                }
+            )
 
         airports = [row["_source"] for row in result["hits"]["hits"]]
 

@@ -15,8 +15,9 @@ def index():
 
 @blueprint.route("/search", methods=["GET"])
 def getAirportData():
-    query = request.args.get("q")
-    if not query:
+    cityQuery = request.args.get("c")
+    nameQuery = request.args.get("n")
+    if not cityQuery and not nameQuery:
         message = jsonify({
             "status": "error",
             "msg": "Missing query"
@@ -24,7 +25,7 @@ def getAirportData():
         return message, 400
 
     try:
-        res = app._get_current_object().el_utils.fetch_data(query)
+        res = app._get_current_object().el_utils.fetch_data(cityQuery, nameQuery)
         if res is None:
             return jsonify()
         return jsonify(res)
