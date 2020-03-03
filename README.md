@@ -1,4 +1,8 @@
-This is fun project. Create web app which shows aiports on the map
+This is fun project to create Web app which shows aiports on the map by searching them by different search criterias.
+The project itself was splitted into two parts:
+
+1. Develop a Web app
+2. Deploy the app to the Cloud Platform
 
 In this project I used next technologies:
 
@@ -7,14 +11,31 @@ In this project I used next technologies:
 - PyCharm Community
 - Visual Studio Code
 
+#### What’s Included? Programming languages, frameworks and etc:
+- Python3
+- JavaScript
+- ReactJs
+- Elasticsearch
+- BootStrap
+- HTML/CSS
+
+### Get Started
+
 #### Install Python3 dependencies
 pip3 install -r airport-app/requirements.txt
 
-#### Elasticsearch
+#### Run Elasticsearch
 
 ```
 docker run -p 9200:9200 -p 9300:9300 -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
 ```
+
+#### Run ReactJS
+cd /airport-map/airport-app/web
+npm start
+
+
+#### What’s Included?
 
 ##### Elasticsearch indexes fields
 

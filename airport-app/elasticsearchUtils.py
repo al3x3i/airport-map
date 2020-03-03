@@ -32,7 +32,7 @@ class ElasticsearchUtils:
             result = self.es.search(
                 index="airport_data",
                 body={
-                    "query": {"match": {"city": cityName}},
+                    "query": {"match_phrase": {"city": cityName}},
                     "size": 750  # max document size
                 }
             )
@@ -40,19 +40,18 @@ class ElasticsearchUtils:
             result = self.es.search(
                 index="airport_data",
                 body={
-                    "query": {"match": {"name": airportName}},
+                    "query": {"match_phrase": {"name": airportName}},
                     "size": 750  # max document size
                 }
             )
 
         airports = [row["_source"] for row in result["hits"]["hits"]]
 
-        # Only return first airport
         if airports:
-            airport = airports[0]
-            return airport
+            # airport = airports[0] // Return only first, obsolete
+            print("found:%s", result)
+            return airports
 
-        print("found:%s", result)
         return None
 
     def initialize_elasticsearch(self):
@@ -97,7 +96,7 @@ class ElasticsearchUtils:
                 formatted_fields = dict(zip(self.ElIndexAirport, record_data))
                 formatted_fields_json = json.dumps(formatted_fields)
                 #
-                self.es.index(index=self.AIRPORT_INDEX, doc_type='truck',
+                self.es.index(index=self.AIRPORT_INDEX, doc_type='aiport_data',
                               id=record_id, body=formatted_fields_json)
 
         print("Finished Loading records into the Elasticsearch")
