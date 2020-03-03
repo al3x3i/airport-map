@@ -17,38 +17,44 @@ class App extends React.Component {
     };
     this.baseURL = "http://localhost:5000";
     this.globalMap = null;
-    this.drawAirportPoint = this.drawAirportPoint.bind(this);
+    this.drawAirportPoint = this.drawAirportPoints.bind(this);
     this.callbackSearchAirportCity = this.callbackSearchAirportCity.bind(this); // How to bind, shorter code
     this.callbackSearchAirportName = this.callbackSearchAirportName.bind(this);
   }
 
-  drawAirportPoint(longitude, latitude) {
-    this.globalMap
-      .addSource("airport-point", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: [longitude, latitude]
-              }
-            }
-          ]
+  drawAirportPoints(cooridantes) {
+    var data = cooridantes.map(function(coordinate) {
+      var formattedPoint = {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [coordinate[0], coordinate[1]]
         }
-      })
-      .addLayer({
-        id: "airport-layer",
-        type: "circle",
-        source: "airport-point",
-        paint: {
-          "circle-radius": 6,
-          "circle-color": "#B42222"
-        },
-        filter: ["==", "$type", "Point"]
-      });
+      };
+
+      return formattedPoint;
+    });
+
+    var formattedPointsData = {
+      type: "FeatureCollection",
+      features: data
+    };
+
+    this.globalMap.addSource("airport-point", {
+      type: "geojson",
+      data: formattedPointsData
+    });
+
+    this.globalMap.addLayer({
+      id: "airport-layer",
+      type: "circle",
+      source: "airport-point",
+      paint: {
+        "circle-radius": 6,
+        "circle-color": "#B42222"
+      },
+      filter: ["==", "$type", "Point"]
+    });
   }
 
   flyToMapPosition(longitude, latitude) {
@@ -128,10 +134,17 @@ class App extends React.Component {
       .get(searchURL)
       .then(response => {
         if (Object.keys(response.data).length !== 0) {
-          var latitude = response.data.latitude;
-          var longitude = response.data.longitude;
-          this.drawAirportPoint(longitude, latitude);
-          this.flyToMapPosition(longitude, latitude);
+          var cooridantes = response.data.map(function(p) {
+            return [p.longitude, p.latitude];
+          });
+
+          this.drawAirportPoints(cooridantes);
+
+          // Fly to first position
+          this.flyToMapPosition(
+            response.data[0].longitude,
+            response.data[0].latitude
+          );
           console.log("Request response: " + JSON.stringify(response.data));
         } else {
           console.log("Empty result");
@@ -155,7 +168,7 @@ class App extends React.Component {
         <div ref={el => (this.mapContainer = el)} className="mapContainer" />
         <SearchSerction
           callBackFuncCity={this.callbackSearchAirportCity}
-          callBackFuncCity={this.callbackSearchAirportName}
+          callBackFuncName={this.callbackSearchAirportName}
         />
       </div>
     );
@@ -168,7 +181,7 @@ class SearchSerction extends React.Component {
   constructor(props: Props) {
     super(props);
     this.searchCityCallBack = this.props.callBackFuncCity;
-    this.searchNameCallBack = this.props.callBackFuncCity;
+    this.searchNameCallBack = this.props.callBackFuncName;
     this.findAirportCity = this.findAirportCity.bind(this);
     this.findAirportName = this.findAirportName.bind(this);
   }
