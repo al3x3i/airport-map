@@ -23,7 +23,7 @@ class App extends React.Component {
   }
 
   drawAirportPoints(cooridantes) {
-    var data = cooridantes.map(function(coordinate) {
+    var featuresData = cooridantes.map(function(coordinate) {
       var formattedPoint = {
         type: "Feature",
         geometry: {
@@ -31,13 +31,12 @@ class App extends React.Component {
           coordinates: [coordinate[0], coordinate[1]]
         }
       };
-
       return formattedPoint;
     });
 
     var formattedPointsData = {
       type: "FeatureCollection",
-      features: data
+      features: featuresData
     };
 
     this.globalMap.addSource("airport-point", {
@@ -134,6 +133,7 @@ class App extends React.Component {
       .get(searchURL)
       .then(response => {
         if (Object.keys(response.data).length !== 0) {
+          // Searching by by city 'New' might return many aiports, like: New Bern, New Orleans, New York ..
           var cooridantes = response.data.map(function(p) {
             return [p.longitude, p.latitude];
           });
