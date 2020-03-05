@@ -27,7 +27,7 @@ class App extends React.Component {
       var formattedPoint = {
         type: "Feature",
         properties: {
-          airportData: value.airportDetails
+          airportData: getFormattedAirportDetails(value.airportDetails)
         },
         geometry: {
           type: "Point",
@@ -57,6 +57,22 @@ class App extends React.Component {
       },
       filter: ["==", "$type", "Point"]
     });
+
+    function getFormattedAirportDetails(airportDetails) {
+      return (
+        "<div>" +
+        "<p><strong>Country: </strong>" +
+        airportDetails.country +
+        "</p>" +
+        "<p><strong>Citry: </strong>" +
+        airportDetails.city +
+        "</p>" +
+        "<p><strong>Airport name: </strong>" +
+        airportDetails.name +
+        "</p>" +
+        "<div>"
+      );
+    }
   }
 
   flyToMapPosition(longitude, latitude) {
@@ -81,21 +97,18 @@ class App extends React.Component {
       style: "mapbox://styles/mapbox/streets-v11",
       center: [lng, lat],
       zoom,
-      attributionControl: false //Hint: Remove MapBox logo
+      attributionControl: false //It hides MapBox logo
     });
 
     map.on("move", () => {
       const { lng, lat } = map.getCenter();
 
+      // The values are shown in top left corner
       this.setState({
         lng: lng.toFixed(4),
         lat: lat.toFixed(4),
         zoom: map.getZoom().toFixed(2)
       });
-    });
-
-    map.on("load", function() {
-      console.log("Call on load function");
     });
 
     // Create a popup, but don't add it to the map yet.
@@ -170,10 +183,6 @@ class App extends React.Component {
       .get(searchURL)
       .then(response => {
         if (Object.keys(response.data).length !== 0) {
-          // var cooridantes = response.data.map(function(p) {
-          //   return [p.longitude, p.latitude];
-          // });
-
           // Searching by by city 'New' might return many aiports, like: New Bern, New Orleans, New York ..
           var values = response.data.map(function(p) {
             var coordinateDetails = [p.longitude, p.latitude];
