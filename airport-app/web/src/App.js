@@ -22,16 +22,16 @@ class App extends React.Component {
     this.callbackSearchAirportName = this.callbackSearchAirportName.bind(this);
   }
 
-  drawAirportPoints(cooridantes) {
-    var featuresData = cooridantes.map(function(coordinate) {
+  drawAirportPoints(values) {
+    var featuresData = values.map(function(value) {
       var formattedPoint = {
         type: "Feature",
         properties: {
-          airportDetails: "TESTT"
+          airportData: value.airportDetails
         },
         geometry: {
           type: "Point",
-          coordinates: [coordinate[0], coordinate[1]]
+          coordinates: [value.cooridantes[0], value.cooridantes[1]]
         }
       };
       return formattedPoint;
@@ -109,7 +109,7 @@ class App extends React.Component {
       map.getCanvas().style.cursor = "pointer";
 
       var coordinates = e.features[0].geometry.coordinates.slice();
-      var description = e.features[0].properties.description;
+      var airportDetails = e.features[0].properties.airportData;
 
       // Ensure that if the map is zoomed out such that multiple
       // copies of the feature are visible, the popup appears
@@ -122,7 +122,7 @@ class App extends React.Component {
       // based on the feature found.
       popup
         .setLngLat(coordinates)
-        .setHTML(description)
+        .setHTML(airportDetails)
         .addTo(map);
     });
 
@@ -170,19 +170,18 @@ class App extends React.Component {
       .get(searchURL)
       .then(response => {
         if (Object.keys(response.data).length !== 0) {
-          // Searching by by city 'New' might return many aiports, like: New Bern, New Orleans, New York ..
-          var cooridantes = response.data.map(function(p) {
-            return [p.longitude, p.latitude];
-          });
-
-          // var values = response.data.map(function(p) {
-          //   return {
-          //     cooridantes: [p.longitude, p.latitude],
-          //     second: "det"
-          //   };
+          // var cooridantes = response.data.map(function(p) {
+          //   return [p.longitude, p.latitude];
           // });
 
-          this.drawAirportPoints(cooridantes);
+          // Searching by by city 'New' might return many aiports, like: New Bern, New Orleans, New York ..
+          var values = response.data.map(function(p) {
+            var coordinateDetails = [p.longitude, p.latitude];
+            var details = p;
+            return { cooridantes: coordinateDetails, airportDetails: details };
+          });
+
+          this.drawAirportPoints(values);
 
           // Fly to first position
           this.flyToMapPosition(
