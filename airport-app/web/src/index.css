@@ -69,3 +69,9 @@ code {
 .mapboxgl-ctrl-logo {
   display: none !important;
 }
+
+/* Popup message dialog */
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
