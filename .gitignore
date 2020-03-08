@@ -1,6 +1,7 @@
 # Default ignored files
 node_modules
 build
+static
 
 # Environments
 airport-app/venv/

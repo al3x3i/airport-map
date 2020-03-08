@@ -15,7 +15,7 @@ class App extends React.Component {
       lat: 34,
       zoom: 1.5
     };
-    this.baseURL = "http://localhost:5000";
+    this.baseURL = "http://0.0.0.0:5000";
     this.globalMap = null;
     this.drawAirportPoint = this.drawAirportPoints.bind(this);
     this.callbackSearchAirportCity = this.callbackSearchAirportCity.bind(this); // How to bind, shorter code

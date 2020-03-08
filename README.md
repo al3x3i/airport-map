@@ -22,50 +22,77 @@ In this project I used next technologies:
 
 ### Get Started
 
+### Development mode
+
 #### Install Python3 dependencies
 
 pip3 install -r airport-app/requirements.txt
 
-#### Run Elasticsearch
+##### Run Elasticsearch
 
 ```
 docker run -dp 9200:9200 -p 9300:9300 -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
 ```
 
-#### Create Docker network aiportapp_network
+##### Run Python script
+
+```
+python3 app.py
+```
+
+##### Run ReactJs
+
+```
+cd web && npm start
+```
+
+##### Build Docker image
+
+```
+docker build -t aiport_app .
+```
+
+### How to run Dockerimage with Elasticsearch
+
+#### #1
+
+##### Create Docker network aiportapp_network
 
 ```
 docker network create aiportapp_network
 ```
 
-#### Run Elasticsearch under aiportapp_network network
+##### Run Elasticsearch with aiportapp_network network
 
 ```
 docker run -dp 9200:9200 -p 9300:9300 --net aiportapp_network --name es_db -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
 ```
 
-#### Inspect Docker network
+##### Run Dockerimage
 
 ```
-docker network inspect bridge
+docker run --rm --net aiportapp_network -p 5000:5000 aiport_app
 ```
 
-#### Run ReactJS
+#### Userfull commands which can help while working with docker
 
-cd /airport-map/airport-app/web
-npm start
-
-#### Build Docker image
+###### Inspect Docker network
 
 ```
-docker build -t hello .
+docker network inspect aiportapp_network
 ```
 
-#### Connect to running container
+###### Run shell inside docker container
 
 ```
-$ cont=0283d230a9d6
-$ docker exec -it ${cont} sh
+container=3418c1e3f01a
+docker exec -it $container sh
+```
+
+##### Stop PIDs of processes
+
+```
+fuser -k -n tcp 5000
 ```
 
 #### What’s Included?

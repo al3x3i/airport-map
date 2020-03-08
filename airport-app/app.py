@@ -35,10 +35,13 @@ utils = ElasticsearchUtils(el_host=EL_DEFAULT_HOST, el_port=EL_DEFAULT_PORT)
 
 
 def create_app():
-    app = Flask(__name__)
+    # The build_webapp is generated buy npm run build
+    app = Flask(__name__, static_folder='./static',
+                template_folder="./build_template")
     CORS(app)
     app.config.from_object("config.DevelopmentConfig")
-    app.register_blueprint(blueprint)
+    app.register_blueprint(blueprint, static_folder='./build',
+                           static_url_path='./build')
     app.el_utils = utils
     app.run(host='0.0.0.0', port=APP_DEFAULT_PORT)
 

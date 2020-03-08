@@ -20,12 +20,19 @@ RUN npm install
 # create optimized build
 RUN npm run build
 
-# install python dependencies
+
+# copy build files for flask
 WORKDIR /opt/aiport-app/
+
+RUN mkdir -p build_template && cp -r ./web/build/* build_template/
+RUN mkdir -p static && cp -r ./web/build/static/* static/
+
+# install python dependencies
 RUN pip3 install -r requirements.txt
 
 # expose port
 EXPOSE 5000
+# EXPOSE 3000
 
 # run the application
 CMD ["python3", "./app.py"]
