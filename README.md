@@ -12,6 +12,7 @@ In this project I used next technologies:
 - Visual Studio Code
 
 #### What’s Included? Programming languages, frameworks and etc:
+
 - Python3
 - JavaScript
 - ReactJs
@@ -22,18 +23,50 @@ In this project I used next technologies:
 ### Get Started
 
 #### Install Python3 dependencies
+
 pip3 install -r airport-app/requirements.txt
 
 #### Run Elasticsearch
 
 ```
-docker run -p 9200:9200 -p 9300:9300 -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+docker run -dp 9200:9200 -p 9300:9300 -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+```
+
+#### Create Docker network aiportapp_network
+
+```
+docker network create aiportapp_network
+```
+
+#### Run Elasticsearch under aiportapp_network network
+
+```
+docker run -dp 9200:9200 -p 9300:9300 --net aiportapp_network --name es_db -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+```
+
+#### Inspect Docker network
+
+```
+docker network inspect bridge
 ```
 
 #### Run ReactJS
+
 cd /airport-map/airport-app/web
 npm start
 
+#### Build Docker image
+
+```
+docker build -t hello .
+```
+
+#### Connect to running container
+
+```
+$ cont=0283d230a9d6
+$ docker exec -it ${cont} sh
+```
 
 #### What’s Included?
 
@@ -67,5 +100,5 @@ https://openflights.org/data.html
 ##### More information you can find here https://hub.docker.com/_/elasticsearch/
 
 ##### (Learning) Options to run React App locally:
-https://create-react-app.dev/docs/deployment/
 
+https://create-react-app.dev/docs/deployment/
