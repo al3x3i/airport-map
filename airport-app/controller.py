@@ -9,8 +9,7 @@ blueprint = Blueprint('main', __name__)
 
 @blueprint.route('/')
 def index():
-    s_result = app._get_current_object().el_utils.fetch_data("tartu")  # TODO Debug
-    return s_result  # render_template('index.html', )
+    return render_template('index.html', )
 
 
 @blueprint.route("/search", methods=["GET"])
