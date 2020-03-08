@@ -49,7 +49,7 @@ cd web && npm start
 ##### Build Docker image
 
 ```
-docker build -t aiport_app .
+docker build -t al3x3i/aiport_app .
 ```
 
 ### How to run Dockerimage with Elasticsearch
@@ -71,7 +71,7 @@ docker run -dp 9200:9200 -p 9300:9300 --net aiportapp_network --name es_db -v el
 ##### Run Dockerimage
 
 ```
-docker run --rm --net aiportapp_network -p 5000:5000 aiport_app
+docker run --rm --net aiportapp_network -p 5000:5000 al3x3i/aiport_app
 ```
 
 #### Userfull commands which can help while working with docker
