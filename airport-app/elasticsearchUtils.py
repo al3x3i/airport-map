@@ -19,9 +19,9 @@ class ElasticsearchUtils:
                       'tz_db_time', 'type', 'source']
 
     def __init__(self, el_host: str, el_port: int):
-        self.AIRPORT_INDEX: str = 'airport_data'
-        self.TIME_SLEEP_SEC: int = 3
-        self.EL_CONNECTION_RETRIES: int = 3
+        self.AIRPORT_INDEX = 'airport_data'
+        self.TIME_SLEEP_SEC = 3
+        self.EL_CONNECTION_RETRIES = 3
         # Elasticsearch instance
         self.es = Elasticsearch([{'host': el_host, 'port': el_port}])
         self.__airports_url = "https://raw.githubusercontent.com/Al3x3i/airport-map/master/airports.dat"
