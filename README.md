@@ -92,7 +92,7 @@ docker exec -it $container sh
 ##### Stop PIDs of processes
 
 ```
-fuser -k -n tcp 5000
+sudo fuser -k -n tcp 5000
 ```
 
 #### What’s Included?

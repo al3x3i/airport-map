@@ -40,8 +40,7 @@ def create_app():
                 template_folder="./build_template")
     CORS(app)
     app.config.from_object("config.DevelopmentConfig")
-    app.register_blueprint(blueprint, static_folder='./build',
-                           static_url_path='./build')
+    app.register_blueprint(blueprint)
     app.el_utils = utils
     app.run(host='0.0.0.0', port=APP_DEFAULT_PORT)
 

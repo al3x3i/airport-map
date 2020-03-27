@@ -9,7 +9,7 @@ blueprint = Blueprint('main', __name__)
 
 @blueprint.route('/')
 def index():
-    return render_template('index.html',)
+    return render_template('index.html')
 
 
 @blueprint.route("/search", methods=["GET"])

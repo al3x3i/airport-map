@@ -2,6 +2,7 @@
 node_modules
 build
 static
+build_template
 
 # Environments
 airport-app/venv/
