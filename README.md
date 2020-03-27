@@ -22,6 +22,12 @@ In this project I used next technologies:
 
 ### Get Started
 
+### Production mode
+
+#### Run shell script to start the web application
+
+./docker-run.sh
+
 ### Development mode
 
 #### Install Python3 dependencies
