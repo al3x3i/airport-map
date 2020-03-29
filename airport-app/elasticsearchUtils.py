@@ -18,10 +18,10 @@ class ElasticsearchUtils:
                       'altitude', 'timezone', 'dst',
                       'tz_db_time', 'type', 'source']
 
-    def __init__(self, el_host: str, el_port: int):
+    def __init__(self, el_host: str, el_port: int, es_connection_retries):
         self.AIRPORT_INDEX = 'airport_data'
         self.TIME_SLEEP_SEC = 3
-        self.EL_CONNECTION_RETRIES = 3
+        self.ES_RETRY_CONNECTIONS = es_connection_retries
         # Elasticsearch instance
         self.es = Elasticsearch([{'host': el_host, 'port': el_port}])
         self.__airports_url = "https://raw.githubusercontent.com/Al3x3i/airport-map/master/airports.dat"
@@ -56,7 +56,7 @@ class ElasticsearchUtils:
 
     def initialize_elasticsearch(self):
 
-        if self.check_elasticsearch(self.EL_CONNECTION_RETRIES):
+        if self.check_elasticsearch(self.ES_RETRY_CONNECTIONS):
 
             # //TODO ONLY FOR DEVELOPMENT
             # self.es.indices.delete(self.AIRPORT_INDEX)

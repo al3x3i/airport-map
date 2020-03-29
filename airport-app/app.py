@@ -1,14 +1,15 @@
 from flask import Flask
 from flask_cors import CORS
 import socket
+import os
 
 from controller import blueprint
 from elasticsearchUtils import ElasticsearchUtils
 
 # Initialize Elasticsearch
-EL_DEFAULT_PORT = 9200
+ES_DEFAULT_PORT = 9200
 # the network name is defined by --name es_db, check README.md
-EL_DEFAULT_HOST = 'es_db'
+ES_DEFAULT_HOST = 'es_db'
 
 APP_DEFAULT_PORT = 5000
 APP_DEFAULT_HOST = '0.0.0.0'
@@ -19,19 +20,24 @@ APP_DEBUG_MODE = False
 
 s = socket.socket()
 try:
-    s.connect((EL_DEFAULT_HOST, EL_DEFAULT_PORT))
+    s.connect((ES_DEFAULT_HOST, ES_DEFAULT_PORT))
 except Exception as e:
-    EL_DEFAULT_HOST = 'localhost'
+    ES_DEFAULT_HOST = 'localhost'
 finally:
     s.close()
 print("Elasticsearch connection %s:%d." %
-      (EL_DEFAULT_HOST, EL_DEFAULT_PORT))
+      (ES_DEFAULT_HOST, ES_DEFAULT_PORT))
 
 # if len(sys.argv) == 0:
 #     ELASTICSEARCH_HOST = os.environ.get("es", sys.argv[0])
 # else:
 #     ELASTICSEARCH_HOST = os.environ.get("es", DEFAULT_HOST)
-utils = ElasticsearchUtils(el_host=EL_DEFAULT_HOST, el_port=EL_DEFAULT_PORT)
+ES_DEFAULT_CONNECTION_RETRIES = 3
+es_con_retries = os.environ.get(
+    "ES_RETRY_CONNECTIONS", ES_DEFAULT_CONNECTION_RETRIES)
+
+utils = ElasticsearchUtils(el_host=ES_DEFAULT_HOST, el_port=ES_DEFAULT_PORT,
+                           es_connection_retries=int(es_con_retries))
 
 
 def create_app():

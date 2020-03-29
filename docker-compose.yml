@@ -1,0 +1,13 @@
+version: "2"
+services:
+  es:
+    image: elasticsearch:7.5.2
+    environment:
+      - discovery.type=single-node
+  web:
+    image: al3x3i/aiport_app
+    command: python3 app.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
