@@ -34,7 +34,7 @@ In this project I used next technologies:
 
 pip3 install -r airport-app/requirements.txt
 
-##### Run Elasticsearch
+##### Run Elasticsearch ('localhost')
 
 ```
 docker run -dp 9200:9200 -p 9300:9300 -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
@@ -74,10 +74,10 @@ docker network create aiportapp_network
 docker run -dp 9200:9200 -p 9300:9300 --net aiportapp_network --name es_db -v elasticsearch-data:/usr/share/elasticsearch/data -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.2
 ```
 
-##### Run Dockerimage
+##### Run Dockerimage, Required `ES_HOST` variable otherwise app will not able to connect to "elasticsearch" inside "aiportapp_network" network
 
 ```
-docker run --rm --net aiportapp_network -p 5000:5000 al3x3i/aiport_app
+docker run --rm --net aiportapp_network -p 5000:5000 --env "ES_HOST=es_db" al3x3i/aiport_app
 ```
 
 #### Userfull commands which can help while working with docker
