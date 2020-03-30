@@ -34,8 +34,7 @@ RUN pip3 install -r requirements.txt
 EXPOSE 5000
 # EXPOSE 3000
 
-# run the application, comment file because docker-compose will run with environment variable
-# CMD ["python3", "./app.py"]
-
+# run the application, docker-compose uses environment variable
+CMD ["python3", "./app.py"]
 
 
