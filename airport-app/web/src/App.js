@@ -64,7 +64,7 @@ class App extends React.Component {
         "<p><strong>Country: </strong>" +
         airportDetails.country +
         "</p>" +
-        "<p><strong>Citry: </strong>" +
+        "<p><strong>City: </strong>" +
         airportDetails.city +
         "</p>" +
         "<p><strong>Airport name: </strong>" +
