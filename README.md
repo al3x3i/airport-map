@@ -1,5 +1,5 @@
-This is fun project to create Web app which shows aiports on the map by searching them by different search criterias.
-The project itself was splitted into two parts:
+This is a fun project to create a Web app that shows airports on the map by searching them by different search criteria.
+The project itself was split into two parts:
 
 1. Develop a Web app
 2. Deploy the app to the Cloud Platform
