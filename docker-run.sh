@@ -23,4 +23,4 @@ do
 done
 
 # run aiport-app
-docker run --rm --net aiportapp_network -p 5000:5000 al3x3i/aiport_app
+docker run --rm --net aiportapp_network -p 5000:5000 --env "ES_HOST=es_db" al3x3i/aiport_app
